@@ -1,55 +1,121 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import Dashboard from "./pages/Dashboard";
+import Employees from "./pages/Employees";
+import Events from "./pages/Events";
+import Templates from "./pages/Templates";
+import EmailCenter from "./pages/EmailCenter";
+import Settings from "./pages/Settings";
 
-const linkStyle = ({ isActive }) => ({
-  display: "block",
-  padding: "12px 14px",
-  borderRadius: "10px",
-  textDecoration: "none",
-  color: isActive ? "#f8e7bf" : "#bfa77c",
-  background: isActive ? "rgba(216,160,61,0.16)" : "transparent",
-  marginBottom: "8px",
-});
+export default function App() {
+  const [page, setPage] = useState("dashboard");
 
-export default function Sidebar() {
+  const menuItems = [
+    { key: "dashboard", label: "Dashboard" },
+    { key: "employees", label: "Employees" },
+    { key: "events", label: "Events" },
+    { key: "templates", label: "Templates" },
+    { key: "email-center", label: "Email Center" },
+    { key: "settings", label: "Settings" },
+  ];
+
+  const renderPage = () => {
+    switch (page) {
+      case "dashboard":
+        return <Dashboard />;
+      case "employees":
+        return <Employees />;
+      case "events":
+        return <Events />;
+      case "templates":
+        return <Templates />;
+      case "email-center":
+        return <EmailCenter />;
+      case "settings":
+        return <Settings />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
   return (
-    <aside
-      style={{
-        width: "240px",
-        background: "#1a1109",
-        borderRight: "1px solid rgba(255,255,255,0.08)",
-        padding: "18px 14px",
-      }}
-    >
-      <div style={{ marginBottom: "28px" }}>
-        <h2 style={{ margin: 0, color: "#d8a03d", fontSize: "20px" }}>Nambiar Builders</h2>
-        <p style={{ margin: "4px 0 0", color: "#8f7750", fontSize: "12px", letterSpacing: "1px" }}>
-          HR FAMILY PORTAL
-        </p>
-      </div>
+    <div style={styles.app}>
+      <aside style={styles.sidebar}>
+        <h2 style={styles.logo}>Nambiar Builders</h2>
 
-      <div style={{ marginBottom: "10px", color: "#705d3f", fontSize: "11px" }}>MAIN</div>
+        {menuItems.map((item) => (
+          <button
+            key={item.key}
+            onClick={() => setPage(item.key)}
+            style={{
+              ...styles.menuButton,
+              ...(page === item.key ? styles.activeButton : {}),
+            }}
+          >
+            {item.label}
+          </button>
+        ))}
+      </aside>
 
-      <NavLink to="/dashboard" style={linkStyle}>
-        Dashboard
-      </NavLink>
-
-      <NavLink to="/employees" style={linkStyle}>
-        Employees
-      </NavLink>
-
-      <div style={{ marginTop: "24px", marginBottom: "10px", color: "#705d3f", fontSize: "11px" }}>
-        AUTOMATION
-      </div>
-
-      <div style={{ padding: "12px 14px", color: "#bfa77c" }}>Events</div>
-      <div style={{ padding: "12px 14px", color: "#bfa77c" }}>Templates</div>
-      <div style={{ padding: "12px 14px", color: "#bfa77c" }}>Calendar</div>
-
-      <div style={{ marginTop: "24px", marginBottom: "10px", color: "#705d3f", fontSize: "11px" }}>
-        SETTINGS
-      </div>
-
-      <div style={{ padding: "12px 14px", color: "#bfa77c" }}>Settings</div>
-    </aside>
+      <main style={styles.main}>
+        <div style={styles.pageWrapper}>{renderPage()}</div>
+      </main>
+    </div>
   );
 }
+
+const styles = {
+  app: {
+    minHeight: "100vh",
+    background: "#f5efe6",
+    fontFamily: "Inter, sans-serif",
+  },
+  sidebar: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "250px",
+    height: "100vh",
+    background: "linear-gradient(180deg, #1b1b1b 0%, #111111 100%)",
+    color: "#ffffff",
+    padding: "24px 16px",
+    boxSizing: "border-box",
+    borderRight: "1px solid rgba(255,255,255,0.08)",
+    zIndex: 1000,
+    overflowY: "auto",
+  },
+  logo: {
+    fontSize: "26px",
+    fontWeight: "800",
+    margin: "8px 8px 28px",
+    lineHeight: "1.2",
+  },
+  menuButton: {
+    width: "100%",
+    padding: "14px 16px",
+    marginBottom: "12px",
+    border: "none",
+    borderRadius: "14px",
+    cursor: "pointer",
+    textAlign: "left",
+    fontSize: "16px",
+    fontWeight: "600",
+    background: "#2f2f2f",
+    color: "#ffffff",
+    transition: "0.2s ease",
+  },
+  activeButton: {
+    background: "#8b5e3c",
+    color: "#ffffff",
+  },
+  main: {
+    marginLeft: "250px",
+    minHeight: "100vh",
+    background: "linear-gradient(180deg, #f6f1ea 0%, #efe5d8 100%)",
+    padding: "24px",
+    boxSizing: "border-box",
+  },
+  pageWrapper: {
+    width: "100%",
+    maxWidth: "100%",
+  },
+};

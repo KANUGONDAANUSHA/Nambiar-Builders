@@ -1,31 +1,20 @@
-export default function TopBar() {
+import { useAuth } from "../context/AuthContext";
+
+export default function Topbar() {
+  const { user, logout } = useAuth();
+
   return (
-    <header
-      style={{
-        height: "70px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 20px",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
-      }}
-    >
-      <div>Dashboard</div>
-      <div
-        style={{
-          width: "38px",
-          height: "38px",
-          borderRadius: "50%",
-          background: "#d8a03d",
-          color: "#1b120b",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontWeight: "bold",
-        }}
-      >
-        NK
+    <header className="topbar">
+      <div>
+        <h1>Admin Panel</h1>
+        <p>
+          Logged in as <strong>{user?.name}</strong> ({user?.role})
+        </p>
       </div>
+
+      <button className="btn-secondary" onClick={logout}>
+        Logout
+      </button>
     </header>
   );
 }

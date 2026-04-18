@@ -1,36 +1,59 @@
-datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-model Employee {
-  id          Int      @id @default(autoincrement())
-  name        String
-  email       String   @unique
-  dob         DateTime
-  joiningDate DateTime
-  createdAt   DateTime @default(now())
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
-model Template {
-  id        Int      @id @default(autoincrement())
-  name      String
-  type      String
-  subject   String
-  body      String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+model Employee {
+  id          Int        @id @default(autoincrement())
+  employeeId  String?    @unique
+  name        String
+  email       String     @unique
+  department  String?
+  designation String?
+  dateOfBirth DateTime?
+  joiningDate DateTime?
+  emailLogs   EmailLog[]
 }
 
 model Event {
   id          Int      @id @default(autoincrement())
   title       String
-  description String?
   date        DateTime
+  description String?
+}
+
+model Template {
+  id          Int      @id @default(autoincrement())
+  name        String
   type        String
-  createdAt   DateTime @default(now())
+  subject     String
+  htmlContent String
+}
+
+model EmailLog {
+  id         Int       @id @default(autoincrement())
+  recipient  String
+  subject    String
+  type       String
+  status     String
+  message    String?
+  createdAt  DateTime  @default(now())
+  employeeId Int?
+  employee   Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+}
+
+model AppSetting {
+  id                  Int     @id @default(autoincrement())
+  companyName         String
+  supportEmail        String
+  senderName          String
+  birthdayEnabled     Boolean @default(true)
+  anniversaryEnabled  Boolean @default(true)
+  welcomeEnabled      Boolean @default(true)
+  dailyCronTime       String  @default("09:00")
+  theme               String  @default("brown")
 }
